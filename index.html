@@ -1218,7 +1218,33 @@ let state = {
 /* ===========================
    STEP NAVIGATION
 =========================== */
+function validateStep(stepNum) {
+  if (stepNum === 0) {
+    const src = document.getElementById('sourceCity').value;
+    const dest = document.getElementById('destination').value.trim();
+    
+    if (!src || src === '') {
+      showToast('⚠️ Please select your departing city', 'var(--coral)');
+      return false;
+    }
+    if (!dest || dest === '') {
+      showToast('⚠️ Please enter your destination', 'var(--coral)');
+      document.getElementById('destination').focus();
+      return false;
+    }
+    return true;
+  }
+  return true;
+}
+
 function goStep(n) {
+  // Validate current step before moving forward
+  if (n > state.currentStep) {
+    if (!validateStep(state.currentStep)) {
+      return; // Don't proceed if validation fails
+    }
+  }
+  
   if (n === 3) buildConfirmSummary();
   document.querySelectorAll('.form-step').forEach((s,i) => s.classList.toggle('active', i===n));
   document.querySelectorAll('.prog-step').forEach((s,i) => {
